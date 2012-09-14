@@ -3,9 +3,9 @@
 $PluginInfo['Share42'] = array(
 	'Name' => 'Share42',
 	'Description' => 'Social Sharing Buttons Script.',
-	'Version' => '1.1.1',
+	'Version' => '1.1.2',
 	'Date' => '12.09.2012 15:24:42',
-	'Updated' => '14.09.2012 17:15:17'
+	'Updated' => '14.09.2012 17:15:17',
 	'Author' => 'S',
 	'AuthorUrl' => 'http://rv-home.ru',
 	'RequiredApplications' => FALSE,
@@ -51,7 +51,7 @@ class Share42Plugin extends Gdn_Plugin {
 	}
 
 	public function DiscussionController_AfterComments_Handler($Sender) {
-		if (C('Plugins.Share42.HorizontalPlace') == 'AfterAllComments') {
+		if (C('Plugins.Share42.HorizontalPlace', 'AfterAllComments') == 'AfterAllComments') {
 			$this->RenderPanel($Sender->Data);
 		}
 	}	
@@ -137,8 +137,13 @@ class Share42Plugin extends Gdn_Plugin {
 		if ($this->_Share42Script !== NULL) {
 			return $this->_Share42Script;
 		}
+		$Default = PATH_ROOT . '/plugins/Share42/default/share42';
 		// 1. Check for script in cache.
 		$Values = C('Plugins.Share42');
+		if (!$Values) {
+			$this->_Share42Script = $Default;
+			return $this->_Share42Script;
+		}
 		$Icons = array_map('trim', explode(',', $Values['Services']));
 		$Crc = self::_GetCrc($Values);
 		$DirectoryPath = PATH_CACHE . DS . 'share42' . DS . $Crc;
@@ -187,7 +192,7 @@ class Share42Plugin extends Gdn_Plugin {
 		}
 
 		// 3. Default.
-		$this->_Share42Script = 'plugins/Share42/default/share42';
+		$this->_Share42Script = $Default;
 
 		return $this->_Share42Script;
 	}
