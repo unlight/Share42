@@ -1,0 +1,15 @@
+.ServiceLabel {
+	font-size: 20px;
+	font-weight: normal;
+	padding-left: 35px;
+	margin-left: 10px;
+	text-transform: capitalize;
+}
+
+#Services td {
+	vertical-align: middle;
+}
+
+#Services input.PositionTextBox {
+	width: 50px;
+}
