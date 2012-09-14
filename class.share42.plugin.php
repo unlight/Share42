@@ -89,7 +89,7 @@ class Share42Plugin extends Gdn_Plugin {
 		$Sender->Render();
 	}
 
-	protected function RenderPanel($Data) {
+	protected function RenderPanel($Data = FALSE) {
 		$Url = GetValue('Url', $Data);
 		if (!$Url) $Url = GetValueR('Discussion.Url', $Data);
 		$Title = GetValue('Title', $Data);
