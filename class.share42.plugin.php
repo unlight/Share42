@@ -3,9 +3,9 @@
 $PluginInfo['Share42'] = array(
 	'Name' => 'Share42',
 	'Description' => 'Social Sharing Buttons Script.',
-	'Version' => '1.1.2',
+	'Version' => '1.1.3',
 	'Date' => '12.09.2012 15:24:42',
-	'Updated' => '14.09.2012 17:15:17',
+	'Updated' => '14.09.2012 23:45:47',
 	'Author' => 'S',
 	'AuthorUrl' => 'http://rv-home.ru',
 	'RequiredApplications' => FALSE,
@@ -23,18 +23,6 @@ class Share42Plugin extends Gdn_Plugin {
 		$Share42ScriptPath = $this->_GetShare42ScriptRelative();
 		$Sender->AddJsFile("$Share42ScriptPath/share42.js");
 		$Sender->AddCssFile('plugins/Share42/design/style.css');
-	}
-
-	protected function RenderPanel($Data) {
-		$Url = GetValue('Url', $Data);
-		if (!$Url) $Url = GetValue('Discussion.Url', $Data);
-		$Title = GetValue('Title', $Data);
-		$Attributes = array(
-			'class' => 'share42init',
-			'data-url' => $Url,
-			'data-title' => $Title,
-		);
-		echo Wrap('', 'div', $Attributes);
 	}
 
 	public function DiscussionController_AfterBody_Handler($Sender) {
@@ -60,9 +48,6 @@ class Share42Plugin extends Gdn_Plugin {
 		if (C('Plugins.Share42.HorizontalPlace') == 'AfterFirstComment') {
 			$this->RenderPanel($Sender->Data);
 		}
-	}
-
-	public function DiscussionController_AfterComment_Handler($Sender) {
 	}
 
 	public function SettingsController_Share42_Create($Sender) {
@@ -94,12 +79,26 @@ class Share42Plugin extends Gdn_Plugin {
 			$Form->SetValue('ServiceCollection', $ServiceCollection);
 		}
 
+		$Sender->SetData('ServiceCollection', self::GetServices());
+
 		$Sender->Title(T('Share42 Settings'));
 		$Sender->View = $this->GetView('settings.php');
 		$Sender->Plugin = $this;
 		$Sender->AddCssFile('plugins/Share42/design/dashboard.css');
 		$Sender->AddJsFile('plugins/Share42/js/settings.js');
 		$Sender->Render();
+	}
+
+	protected function RenderPanel($Data) {
+		$Url = GetValue('Url', $Data);
+		if (!$Url) $Url = GetValueR('Discussion.Url', $Data);
+		$Title = GetValue('Title', $Data);
+		$Attributes = array(
+			'class' => 'share42init',
+			'data-url' => $Url,
+			'data-title' => $Title,
+		);
+		echo Wrap('', 'div', $Attributes);
 	}
 
 	protected static function _SortServices(&$Services, $Positions = FALSE) {
@@ -253,7 +252,7 @@ class Share42Plugin extends Gdn_Plugin {
 		RemoveFromConfig('Plugins.Share42');
 	}
 
-	public static function GetServices() {
+	protected static function GetServices() {
 		$Services['blogger'] = array('Id' => 'blogger', 'Name' => 'blogger', 'IconBasename' => 'blogger.png');
 		$Services['bobrdobr'] = array('Id' => 'bobrdobr', 'Name' => 'bobrdobr', 'IconBasename' => 'bobrdobr.png');
 		$Services['delicious'] = array('Id' => 'delicious', 'Name' => 'delicious', 'IconBasename' => 'delicious.png');
