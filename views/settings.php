@@ -62,7 +62,7 @@
 		</thead>
 		<tbody>
 <?php
-foreach ($this->Plugin->GetServices() as $ServiceID => $Service) {
+foreach ($this->Data('ServiceCollection') as $ServiceID => $Service) {
 	$IconUrl = $this->Plugin->GetServiceIconUrl($ServiceID);
 	$IconStyle = "background: url('{$IconUrl}') left center no-repeat";
 	$LabelAttributes = array('style' => $IconStyle, 'class' => 'ServiceLabel');
@@ -75,6 +75,7 @@ foreach ($this->Plugin->GetServices() as $ServiceID => $Service) {
 	$CheckBox = $this->Form->CheckBox('Services[]', '', $CheckBoxOptions);
 	$Label = $this->Form->Label($Service['Name'], $ServiceID, $LabelAttributes);
 	echo Wrap($CheckBox . $Label, 'td');
+	
 	$PositionValue = $this->Form->GetValue("Position_{$ServiceID}", GetValue('Position', $Service));
 	$TextBoxOptions = array('value' => $PositionValue,  'class' => 'InputBox PositionTextBox');
 	echo Wrap($this->Form->TextBox("Position_{$ServiceID}", $TextBoxOptions), 'td');
