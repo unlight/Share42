@@ -3,8 +3,9 @@
 $PluginInfo['Share42'] = array(
 	'Name' => 'Share42',
 	'Description' => 'Social Sharing Buttons Script.',
-	'Version' => '1.1.0',
-	'Date' => '13.09.2012 15:24:42',
+	'Version' => '1.1.1',
+	'Date' => '12.09.2012 15:24:42',
+	'Updated' => '14.09.2012 17:15:17'
 	'Author' => 'S',
 	'AuthorUrl' => 'http://rv-home.ru',
 	'RequiredApplications' => FALSE,
