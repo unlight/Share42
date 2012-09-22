@@ -3,9 +3,9 @@
 $PluginInfo['Share42'] = array(
 	'Name' => 'Share42',
 	'Description' => 'Social Sharing Buttons Script.',
-	'Version' => '1.1.3',
+	'Version' => '1.1.4',
 	'Date' => '12.09.2012 15:24:42',
-	'Updated' => '14.09.2012 23:45:47',
+	'Updated' => '22.09.2012 22:09:14',
 	'Author' => 'S',
 	'AuthorUrl' => 'http://rv-home.ru',
 	'RequiredApplications' => FALSE,
@@ -19,8 +19,14 @@ $PluginInfo['Share42'] = array(
 
 class Share42Plugin extends Gdn_Plugin {
 
+	protected $_DataPath;
+	protected $_Share42Script;
+
 	public function Base_Render_Before($Sender) {
 		$Share42ScriptPath = $this->_GetShare42ScriptRelative();
+		$this->_DataPath = Asset($this->_GetShare42ScriptRelative() . '/');
+		$Sender->AddDefinition('Share42Path', $this->_DataPath);
+		$Sender->AddJsFile('plugins/Share42/js/setdatapath.js');
 		$Sender->AddJsFile("$Share42ScriptPath/share42.js");
 		$Sender->AddCssFile('plugins/Share42/design/style.css');
 	}
@@ -97,6 +103,7 @@ class Share42Plugin extends Gdn_Plugin {
 			'class' => 'share42init',
 			'data-url' => $Url,
 			'data-title' => $Title,
+			'data-path' => $this->_DataPath
 		);
 		echo Wrap('', 'div', $Attributes);
 	}
@@ -119,8 +126,6 @@ class Share42Plugin extends Gdn_Plugin {
 		$Crc = sprintf('%u', crc32(serialize($FieldsForCrc)));
 		return $Crc;
 	}
-
-	protected $_Share42Script;
 
 	protected function _GetShare42ScriptRelative() {
 		static $Result;
@@ -246,6 +251,11 @@ class Share42Plugin extends Gdn_Plugin {
 		$Error = '';
 		if (!extension_loaded('curl')) $Error = ConcatSep("\n", $Error, 'This plugin requires curl.');
 		if ($Error) throw new Gdn_UserException($Error, 400);
+
+		$DirectoryPath = PATH_CACHE . DS . 'share42';
+		if (is_dir($DirectoryPath)) {
+			self::RecursiveRemoveDirectory($DirectoryPath);
+		}
 	}
 
 	public function CleanUp() {
@@ -390,6 +400,10 @@ class Share42Plugin extends Gdn_Plugin {
 			$Options = array('Sprite' => $Sprite, 'CssClass' => 'Dismissable AutoDismiss');
 			$Controller->InformMessage($Message, $Options);
 		}
+	}
+
+	private static function RecursiveRemoveDirectory($Path) {
+		Gdn_FileSystem::RemoveFolder($Path);
 	}
 	
 }
